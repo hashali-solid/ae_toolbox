@@ -1,0 +1,251 @@
+{
+    "meta": {
+        "icon": "dku-icon-snowflake-brand-20",
+        "label": "GSG Snowflake Search",
+        "description": "Search GSG Snowflake Cortex Search Services"
+    },
+    "params" : [
+        {
+            "name": "snowflake_connection",
+            "label": "Snowflake Connection",
+            "description": "Connection role must have access to the Cortex Search service",
+            "type": "CONNECTION",
+            "mandatory": true
+        },
+        {
+            "name": "cortex_search_database",
+            "label": "Cortex Search Database",
+            "type": "STRING",
+            "mandatory": true
+        },
+        {
+            "name": "cortex_search_schema",
+            "label": "Cortex Search Schema",
+            "type": "STRING",
+            "mandatory": true
+        },
+        {
+            "name": "cortex_search_service",
+            "label": "Cortex Search Service Name",
+            "description": "Must already exist",
+            "type": "STRING",
+            "mandatory": true
+        },
+        {
+            "name": "max_documents",
+            "label": "Number of documents to retrieve",
+            "description": "Retrieving more documents can provide more detailed results but may slow processing and increase costs.",
+            "type": "INT",
+            "defaultValue": 3,
+            "mandatory": true
+        },
+        {
+            "name": "search_column",
+            "label": "Column to search in the service",
+            "description": "Case sensitive",
+            "type": "STRING",
+            "mandatory": true
+        },
+        {
+            "name": "metadata_columns",
+            "label": "Metadata columns defined in the service",
+            "description": "Case sensitive",
+            "type": "STRINGS"
+        },
+        {
+            "name": "runtime_filters_help",
+            "type": "SEPARATOR",
+            "label": "Filters",
+            "description": "Create <a href='https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-search/query-cortex-search-service#filter-syntax' target='_blank' rel='noopener'>filters for attribute columns in search service</a>."
+        },
+        {
+            "name": "runtime_filters",
+            "label": "Agent Filters (optional)",
+            "type": "OBJECT_LIST",
+            "description": "Create filters that agents can use to provide filter values at call time. [ADD AN OBJECT] to add a filter.",
+            "mandatory": false,
+            "subParams": [
+                {
+                    "name": "key",
+                    "label": "Filter Key",
+                    "type": "STRING",
+                    "description": "JSON key shown to the agent for this filter in the tool descriptor",
+                    "mandatory": true
+                },
+                {
+                    "name": "description",
+                    "label": "Filter Description",
+                    "type": "STRING",
+                    "description": "Description shown to the agent for this filter in the tool descriptor",
+                    "mandatory": false
+                },
+                {
+                    "name": "column",
+                    "label": "Column Name",
+                    "type": "STRING",
+                    "description": "Case sensitive",
+                    "mandatory": true
+                },
+                {
+                    "name": "columnType",
+                    "label": "Column Type",
+                    "type": "SELECT",
+                    "selectChoices": [
+                        {"value": "string", "label": "String"},
+                        {"value": "string_array", "label": "String array"},
+                        {"value": "date", "label": "Date"},
+                        {"value": "number", "label": "Number"}
+                    ],
+                    "mandatory": true
+                }
+            ]
+        },
+        {
+          "name": "filters",
+          "label": "Static Filters (optional)",
+          "type": "OBJECT_LIST",
+          "description": "Create filters with static filtering values. [ADD AN OBJECT] to add a filter.",
+          "mandatory": false,
+          "subParams": [
+            {
+              "name": "column",
+              "label": "Column Name",
+              "type": "STRING",
+              "description": "Case sensitive",
+              "mandatory": true
+            },
+            {
+              "name": "columnType",
+              "label": "Column Type",
+              "type": "SELECT",
+              "selectChoices": [
+                {"value": "string", "label": "String"},
+                {"value": "string_array", "label": "Array of Strings"},
+                {"value": "date", "label": "Date"},
+                {"value": "number", "label": "Number"}
+              ],
+              "mandatory": true
+            },
+             {
+               "name": "stringOp",
+               "label": "String Operator",
+               "type": "SELECT",
+               "selectChoices": [
+                 {"value": "equals", "label": "Equals"},
+                 {"value": "not_equals", "label": "Does not equal"}
+               ],
+               "visibilityCondition": "model.columnType === 'string'"
+             },
+            {
+              "name": "values",
+              "label": "Filter Values",
+              "type": "STRINGS",
+               "description": "One or more values",
+               "visibilityCondition": "model.columnType === 'string' || model.columnType === 'string_array'"
+            },
+             {
+               "name": "arrayOp",
+               "label": "Array Operator",
+               "type": "SELECT",
+               "selectChoices": [
+                 {"value": "contains", "label": "Contains"},
+                 {"value": "not_contains", "label": "Does not contain"}
+               ],
+               "visibilityCondition": "model.columnType === 'string_array'"
+             },
+            {
+              "name": "logic",
+              "label": "Array Logic",
+              "type": "SELECT",
+              "selectChoices": [
+                {"value": "or", "label": "Any (OR)"},
+                {"value": "and", "label": "All (AND)"}
+              ],
+              "visibilityCondition": "model.columnType === 'string_array'"
+            },
+             {
+               "name": "dateOp",
+               "label": "Date Operator",
+               "type": "SELECT",
+               "selectChoices": [
+                 {"value": "equals", "label": "Equals"},
+                 {"value": "gte", "label": "Greater than or equal"},
+                 {"value": "lte", "label": "Less than or equal"},
+                 {"value": "between", "label": "Between"}
+               ],
+               "visibilityCondition": "model.columnType === 'date'"
+             },
+            {
+              "name": "date",
+              "label": "Date",
+              "type": "DATE",
+              "visibilityCondition": "model.columnType === 'date' && model.dateOp !== 'between'"
+            },
+            {
+              "name": "startDate",
+              "label": "Start Date",
+              "type": "DATE",
+              "visibilityCondition": "model.columnType === 'date' && model.dateOp === 'between'"
+            },
+            {
+              "name": "endDate",
+              "label": "End Date",
+              "type": "DATE",
+              "visibilityCondition": "model.columnType === 'date' && model.dateOp === 'between'"
+            },
+             {
+               "name": "numOp",
+               "label": "Number Operator",
+               "type": "SELECT",
+               "selectChoices": [
+                 {"value": "equals", "label": "Equals"},
+                 {"value": "gte", "label": "Greater than or equal to"},
+                 {"value": "lte", "label": "Less than or equal to"},
+                 {"value": "between", "label": "Between"}
+               ],
+               "visibilityCondition": "model.columnType === 'number'"
+             },
+            {
+              "name": "value",
+              "label": "Number Value",
+              "type": "DOUBLE",
+              "visibilityCondition": "model.columnType === 'number' && model.numOp !== 'between'"
+            },
+            {
+              "name": "min",
+              "label": "Min Value",
+              "type": "DOUBLE",
+              "visibilityCondition": "model.columnType === 'number' && model.numOp === 'between'"
+            },
+            {
+              "name": "max",
+              "label": "Max Value",
+              "type": "DOUBLE",
+              "visibilityCondition": "model.columnType === 'number' && model.numOp === 'between'"
+            }
+          ]
+        },
+        {
+            "name": "tool_desciptors",
+            "type": "SEPARATOR",
+            "label": "Tool Descriptors",
+            "description": "Set descriptors shown to the agent for this tool. Check Tool Descriptor to see output."
+        },
+        {
+            "name": "tool_description",
+            "label": "Tool description",
+            "type": "STRING",
+            "description": "Overall tool description.",
+            "defaultValue": "Searches a Snowflake Cortex Search service. Returns an array of results. For each result, returns the content of all columns selected.",
+            "mandatory": true
+        },
+        {
+            "name": "query_description",
+            "label": "Query description",
+            "type": "STRING",
+            "description": "Query input description.",
+            "defaultValue": "The Cortex Search query string",
+            "mandatory": true
+        }
+    ]
+}
