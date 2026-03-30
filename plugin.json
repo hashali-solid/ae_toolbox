@@ -1,0 +1,13 @@
+{
+    "id": "gsg-toolbox",
+    "version": "1.0.0",
+    "meta": {
+        "label": "GSG Toolbox",
+        "description": "Agent tools and flow recipes for GSG",
+        "author": "Ali Hashim",
+        "icon": "fab fa-staylinked",
+        "tags": [],
+        "url": "",
+        "licenseInfo": "Apache Software License"
+    }
+}

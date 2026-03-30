@@ -1,0 +1,117 @@
+{
+    "meta": {
+        "label": "Jira wiki agenda",
+        "description": "Pull Jira issues by filter, compare with latest work-week Confluence child page via LLM, create a new child page with change report and output a copy of it.",
+        "icon": "fas fa-puzzle-piece"
+    },
+
+    "kind": "PYTHON",
+
+    "inputRoles": [],
+
+    "outputRoles": [
+        {
+            "name": "main_output",
+            "label": "New child page (copy)",
+            "description": "Dataset with one row: the newly created Confluence child page (page_id, title, body_storage, url, space_key, version_number, created_at, parent_page_id).",
+            "arity": "UNARY",
+            "required": true,
+            "acceptsDataset": true
+        }
+    ],
+
+    "params": [
+        {
+            "name": "jira_base_url",
+            "label": "Jira base URL",
+            "type": "STRING",
+            "description": "e.g. https://your-domain.atlassian.net (no trailing slash)",
+            "mandatory": true
+        },
+        {
+            "name": "jira_token",
+            "label": "Jira token",
+            "type": "STRING",
+            "description": "Jira API token (Bearer or Basic password)",
+            "mandatory": true
+        },
+        {
+            "name": "jira_filter_id",
+            "label": "Jira filter ID",
+            "type": "STRING",
+            "description": "Filter id used in JQL: filter=<id>",
+            "mandatory": true
+        },
+        {
+            "name": "jira_fields",
+            "label": "Jira fields to fetch",
+            "type": "OBJECT_LIST",
+            "description": "Fields to request from the Jira search API. Each row: display title (shown to the LLM) and API field id (e.g. key, summary, customfield_12345).",
+            "subParams": [
+                {
+                    "name": "field_title",
+                    "type": "STRING",
+                    "label": "Field title"
+                },
+                {
+                    "name": "field_id",
+                    "type": "STRING",
+                    "label": "Field ID"
+                }
+            ],
+            "defaultValue": [
+                {"field_title": "Key", "field_id": "key"},
+                {"field_title": "Summary", "field_id": "summary"},
+                {"field_title": "Assignee", "field_id": "assignee"},
+                {"field_title": "Description", "field_id": "description"},
+                {"field_title": "Comment", "field_id": "comment"}
+            ]
+        },
+        {
+            "name": "wiki_base_url",
+            "label": "Wiki base URL",
+            "type": "STRING",
+            "description": "Confluence base URL, e.g. https://wiki.example.com (no trailing slash)",
+            "mandatory": true
+        },
+        {
+            "name": "wiki_username",
+            "label": "Wiki username",
+            "type": "STRING",
+            "description": "Confluence/Wiki username for API authentication",
+            "mandatory": true
+        },
+        {
+            "name": "wiki_token",
+            "label": "Wiki token",
+            "type": "STRING",
+            "description": "Confluence PAT / Bearer token",
+            "mandatory": true
+        },
+        {
+            "name": "wiki_parent_page_id",
+            "label": "Wiki parent page ID",
+            "type": "STRING",
+            "description": "Confluence content id of the parent page under which work-week child pages live",
+            "mandatory": true
+        },
+        {
+            "name": "llm_selection",
+            "label": "LLM",
+            "type": "LLM",
+            "llmUsagePurpose": "GENERIC_COMPLETION",
+            "description": "Dataiku LLM to use for comparing Jira state vs previous page and generating the change report",
+            "mandatory": true
+        },
+        {
+            "name": "llm_system_prompt",
+            "label": "LLM system prompt",
+            "type": "TEXTAREA",
+            "description": "Instructions for the LLM: compose a status report from the full Jira issue data and compare it to the previous week's written report (narrative comparison, not value-only diffs).",
+            "mandatory": false,
+            "defaultValue": "You are a technical writer. You will receive full current Jira issue data and, when available, the previous week's Confluence report. Use this exact top-level section order: (1) ## Executive Summary (2) ## Change Summary (3) ## Issue Status Summaries. In Change Summary, include a markdown table with this exact header: | Issue | Assignee | Status | Change | Comments/Updates | and one row per issue from the data. For Change, use only these emojis: ✅ closed/resolved; 📈 increasing or high escalation, still progressing but not near closure; 📉 decreasing or low priority, progressing toward closure; ⚠️ stalled, no updates, customer concerned about pace; 🚨 blocker/escalation/major issue. In Issue Status Summaries, determine the most significant issues directly from the Jira data, include all high priority/exposure tickets (P1/P2 where present), and provide line-by-line entries for those issues. In Comments/Updates, use plain language: what is happening, why, what is next, and blockers. Compare against previous week when provided. Use markdown headings (##, ###), not bold section titles. Output raw markdown only; do not wrap in code fences."
+        }
+    ],
+
+    "resourceKeys": []
+}

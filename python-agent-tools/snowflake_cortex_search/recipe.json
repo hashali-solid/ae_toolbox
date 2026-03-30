@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "label": "Snowflake Cortex Search Service",
+    "description": "Creates or replaces a Cortex Search Service on the input Snowflake table",
+    "icon": "icon-search"
+  },
+
+  "kind": "PYTHON",
+
+  "params": [
+    {
+      "name": "service_name",
+      "label": "Cortex Search Service name",
+      "type": "STRING",
+      "mandatory": true
+    },
+    {
+      "name": "on_column",
+      "label": "Text column to index",
+      "type": "COLUMN",
+      "columnRole": "input_dataset",
+      "mandatory": true
+    },
+    {
+      "name": "array_attribute_columns",
+      "label": "Attribute columns (arrays)",
+      "description": "Select attribute columns that contain JSON arrays and should be cast as arrays",
+      "type": "COLUMNS",
+      "columnRole": "input_dataset",
+      "selectMultiple": true
+    },
+    {
+      "name": "non_array_attribute_columns",
+      "label": "Attribute columns (non-arrays)",
+      "description": "Select regular attribute columns (non-array)",
+      "type": "COLUMNS",
+      "columnRole": "input_dataset",
+      "selectMultiple": true
+    },
+    {
+      "name": "target_lag",
+      "label": "TARGET_LAG (e.g. 1 hour)",
+      "type": "STRING",
+      "defaultValue": "1 hour"
+    },
+    {
+      "name": "embedding_model",
+      "label": "Embedding model",
+      "type": "SELECT",
+      "selectChoices": [
+        { "value": "snowflake-arctic-embed-m-v1.5",
+          "label": "arctic-embed-M-v1.5 · 768-dim · 512 ctx · EN" },
+        { "value": "snowflake-arctic-embed-l-v2.0",
+          "label": "arctic-embed-L-v2.0 · 1024-dim · 512 ctx · multi" },
+        { "value": "snowflake-arctic-embed-l-v2.0-8k",
+          "label": "arctic-embed-L-v2.0-8k · 1024-dim · 8192 ctx · multi" },
+        { "value": "voyage-multilingual-2",
+          "label": "voyage-multilingual-2 · 1024-dim · 512 ctx · multi" }
+      ],
+      "defaultValue": "snowflake-arctic-embed-m-v1.5",
+      "mandatory": true
+    }
+  ],
+
+  "inputRoles": [
+    {
+      "name": "input_dataset",
+      "label": "Snowflake dataset",
+      "arity": "EXACTLY_ONE",
+      "acceptsDataset": true
+    }
+  ],
+
+  "outputRoles": [
+    {
+      "name": "log_dataset",
+      "label": "Log dataset (Snowflake or internal)",
+      "arity": "EXACTLY_ONE",
+      "acceptsDataset": true
+    }
+  ]
+}

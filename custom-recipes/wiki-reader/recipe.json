@@ -1,0 +1,71 @@
+{
+    "meta": {
+      "label": "Wiki reader",
+      "description": "Fetch Confluence pages from a URL column and write Markdown into a new column",
+      "icon": "fas fa-book"
+    },
+    "kind": "PYTHON",
+  
+    "inputRoles": [
+      {
+        "name": "input_dataset",
+        "label": "Input dataset",
+        "description": "Dataset containing Confluence URLs",
+        "arity": "UNARY",
+        "required": true,
+        "acceptsDataset": true
+      }
+    ],
+  
+    "outputRoles": [
+      {
+        "name": "output_dataset",
+        "label": "Output dataset",
+        "description": "Dataset to write the enriched output to",
+        "arity": "UNARY",
+        "required": true,
+        "acceptsDataset": true
+      }
+    ],
+  
+    "params": [
+      {
+        "name": "CONFLUENCE_BASE",
+        "label": "Confluence base URL",
+        "type": "STRING",
+        "description": "Example: https://npsg-wiki.elements.local (no trailing slash)",
+        "mandatory": true
+      },
+      {
+        "name": "CONFLUENCE_USER",
+        "label": "Confluence user",
+        "type": "STRING",
+        "description": "Username (if required by your Confluence setup)",
+        "mandatory": true
+      },
+      {
+        "name": "CONFLUENCE_TOKEN",
+        "label": "Confluence token (PAT)",
+        "type": "STRING",
+        "description": "Personal access token / bearer token",
+        "mandatory": true
+      },
+      {
+        "name": "INPUT_COLUMN",
+        "label": "Input column (Confluence URL)",
+        "type": "COLUMN",
+        "description": "Column containing Confluence URLs",
+        "mandatory": true,
+        "columnRole": "input_dataset"
+      },
+      {
+        "name": "OUTPUT_COLUMN_NAME",
+        "label": "Output column name",
+        "type": "STRING",
+        "description": "Name of the Markdown output column to create",
+        "mandatory": true
+      }
+    ],
+  
+    "resourceKeys": []
+  }

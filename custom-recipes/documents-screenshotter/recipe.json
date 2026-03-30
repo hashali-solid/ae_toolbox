@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "label": "Documents → Page Screenshots",
+    "description": "Render each page of PDFs/PPTX/DOCX/etc. to images and save to an output managed folder",
+    "icon": "fas fa-file-image"
+  },
+  "kind": "PYTHON",
+
+  "inputRoles": [
+    {
+      "name": "in_docs",
+      "label": "Input documents folder",
+      "description": "Managed folder with PDFs/PPTX/DOCX…",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": false,
+      "acceptsManagedFolder": true
+    }
+  ],
+
+  "outputRoles": [
+    {
+      "name": "out_images",
+      "label": "Output images folder",
+      "description": "Managed folder where page screenshots are written",
+      "arity": "UNARY",
+      "required": true,
+      "acceptsDataset": false,
+      "acceptsManagedFolder": true
+    }
+  ],
+
+  "params": [
+    {
+      "name": "start_page",
+      "label": "Start page (1-based, optional)",
+      "type": "INT",
+      "description": "Leave 0 or blank to start at first page. Uses offset parameter internally.",
+      "defaultValue": 0
+    },
+    {
+      "name": "process_mode",
+      "label": "Processing mode",
+      "type": "SELECT",
+      "description": "Choose whether to process only new documents or rescreenshot all documents",
+      "selectChoices": [
+        {
+          "value": "new_only",
+          "label": "New documents only"
+        },
+        {
+          "value": "all",
+          "label": "All documents (rescreenshot everything)"
+        }
+      ],
+      "defaultValue": "new_only"
+    }
+  ],
+
+  "resourceKeys": []
+}
