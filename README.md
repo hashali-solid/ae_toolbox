@@ -1,6 +1,4 @@
-# ae_toolbox
-
-> **GSG Toolbox** - Agent tools and flow recipes for GSG
+> **AE Toolbox** - Agent tools and flow recipes for AE Workflows in Dataiku
 
 A comprehensive toolkit of agent tools, custom recipes, and Python utilities designed for intelligent automation and workflow management.
 
@@ -126,7 +124,7 @@ This toolbox is configured as a plugin with the following settings:
 
 - **Plugin ID:** `gsg-toolbox`
 - **Version:** `1.0.0`
-- **Description:** Agent tools and flow recipes for GSG
+- **Description:** Agent tools and flow recipes for AEs
 - **Icon:** `fab fa-staylinked`
 
 For more details, see [plugin.json](./plugin.json).
