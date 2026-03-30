@@ -51,8 +51,8 @@ Pre-built workflow recipes for common automation scenarios:
 
 Agent-ready tools built with Python for intelligent automation:
 
-- **[gsg-snowflake-search](./python-agent-tools/gsg-snowflake-search/)** - Snowflake database search integration
-- **[snowflake_cortex_search](./python-agent-tools/snowflake_cortex_search/)** - Snowflake Cortex semantic search capabilities
+- **[ae-snowflake-search](./python-agent-tools/ae-snowflake-search/)** - Snowflake database search integration
+- **[snowflake_cortex_creator](./python-agent-tools/snowflake_cortex_creator/)** - Snowflake Cortex semantic search capabilities
 
 ### 📚 Python Library
 
